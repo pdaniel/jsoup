@@ -9,7 +9,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.Jsoup;
 import org.jsoup.Connection;
 
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.io.IOException;
 import java.util.Map;
@@ -92,10 +94,11 @@ public class UrlConnectTest {
 
     @Test
     public void doesGet() throws IOException {
+        Proxy proxy = new Proxy(Proxy.Type.HTTP,new InetSocketAddress("localhost",9000));
         Connection con = Jsoup.connect(echoURL + "?what=the")
             .userAgent("Mozilla")
             .referrer("http://example.com")
-            .data("what", "about & me?");
+            .data("what", "about & me?").withProxy(proxy);
 
         Document doc = con.get();
         assertEquals("what=the&what=about+%26+me%3F", ihVal("QUERY_STRING", doc));

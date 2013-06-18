@@ -8,10 +8,7 @@ import org.jsoup.parser.Parser;
 import org.jsoup.parser.TokenQueue;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -191,6 +188,11 @@ public class HttpConnection implements Connection {
         return this;
     }
 
+    public Connection withProxy(Proxy proxy) {
+        req.proxy(proxy);
+        return this;
+    }
+
     @SuppressWarnings({"unchecked"})
     private static abstract class Base<T extends Connection.Base> implements Connection.Base<T> {
         URL url;
@@ -312,6 +314,7 @@ public class HttpConnection implements Connection {
         private boolean ignoreHttpErrors = false;
         private boolean ignoreContentType = false;
         private Parser parser;
+        private Proxy proxy;
 
       	private Request() {
             timeoutMilliseconds = 3000;
@@ -387,6 +390,15 @@ public class HttpConnection implements Connection {
         
         public Parser parser() {
             return parser;
+        }
+
+        public Request proxy(Proxy proxy) {
+            this.proxy = proxy;
+            return this;
+        }
+
+        public Proxy getProxy() {
+            return proxy;
         }
     }
 
@@ -528,7 +540,12 @@ public class HttpConnection implements Connection {
 
         // set up connection defaults, and details from request
         private static HttpURLConnection createConnection(Connection.Request req) throws IOException {
-            HttpURLConnection conn = (HttpURLConnection) req.url().openConnection();
+            HttpURLConnection conn;
+            if(req.getProxy()!=null){
+                 conn = (HttpURLConnection) req.url().openConnection(req.getProxy());
+            }else{
+                conn = (HttpURLConnection) req.url().openConnection();
+            }
             conn.setRequestMethod(req.method().name());
             conn.setInstanceFollowRedirects(false); // don't rely on native redirection support
             conn.setConnectTimeout(req.timeout());

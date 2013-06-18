@@ -3,6 +3,7 @@ package org.jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.parser.Parser;
 
+import java.net.Proxy;
 import java.net.URL;
 import java.util.Map;
 import java.util.Collection;
@@ -227,6 +228,8 @@ public interface Connection {
      */
     public Connection response(Response response);
 
+    public Connection withProxy(Proxy proxy);
+
 
     /**
      * Common methods for Requests and Responses
@@ -434,6 +437,10 @@ public interface Connection {
          * @return current Parser
          */
         public Parser parser();
+
+        public Request proxy(Proxy proxy);
+
+        public Proxy getProxy();
     }
 
     /**
