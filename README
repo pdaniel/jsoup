@@ -1,5 +1,7 @@
 jsoup: Java HTML parser that makes sense of real-world HTML soup.
 
+@pdaniel - great library. Added support for proxy. You can see an example in ProxyTest.java
+
 jsoup is a Java library for working with real-world HTML. It provides a very convenient API for extracting and manipulating data, using the best of DOM, CSS, and jquery-like methods.
 
 jsoup implements the WHATWG HTML5 specification (http://whatwg.org/html), and parses HTML to the same DOM as modern browsers do.
